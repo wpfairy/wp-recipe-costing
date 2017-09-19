@@ -1,0 +1,4 @@
+# ignore these files
+package-lock.json
+composer.lock
+*/**/**/.DS_Store

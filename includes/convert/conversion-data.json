@@ -1,0 +1,43 @@
+{
+    "pound": {
+        "abbrviation":"lb",
+        "by":[
+            "weight" [
+                {
+                    
+                }],
+            "volume" [
+                {
+                    
+                }]
+        ""
+    },
+    "gram": {
+        "abbrviation":"g",
+        "age":56,
+        "count":10,
+        "progress":0.0029857,
+        "bad":0
+    },
+    "cup": {
+        "abbrviation":"C",
+        "age":56,
+        "count":10,
+        "progress":0.0029857,
+        "bad":0
+    },
+    "liter": {
+        "abbrviation":"L",
+        "age":56,
+        "count":10,
+        "progress":0.0029857,
+        "bad":0
+    },
+    "gallon": {
+        "status":"Gal",
+        "age":56,
+        "count":10,
+        "progress":0.0029857,
+        "bad":0
+    }
+}
