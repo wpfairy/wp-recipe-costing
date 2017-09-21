@@ -1,22 +1,6 @@
 <?php
 /*
-    "WordPress Plugin Template" Copyright (C) 2017 Michael Simpson  (email : michael.d.simpson@gmail.com)
-
-    This file is part of WordPress Plugin Template for WordPress.
-
-    WordPress Plugin Template is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    WordPress Plugin Template is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Contact Form to Database Extension.
-    If not, see http://www.gnu.org/licenses/gpl-3.0.html
+ * @package    Wpf_Recipe_Costing\Includes
 */
 
 class WpfRecipeCosting_OptionsManager {
@@ -294,28 +278,98 @@ class WpfRecipeCosting_OptionsManager {
         // HTML for the page
         $settingsGroup = get_class($this) . '-settings-group';
         ?>
-        <div class="wrap">
+        <div class="wrap container">
             <h2><?php _e($displayName . ' Settings', 'wpf-recipe-costing'); ?></h2>
-            
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                      <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#recipes" role="tab">Recipes</a>
-                      </li>
-                      <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#costcards" role="tab">Cost Cards</a>
-                      </li>
-                      <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
-                      </li>
-                </ul>
+     
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#recipes" role="tab">Recipes</a>
+                  </li>
+                  <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#costcards" role="tab">Cost Cards</a>
+                  </li>
+                  <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#settings" role="tab">Settings</a>
+                  </li>
+            </ul>
 
-                <!-- Tab panes -->
-                <div class="tab-content">
-                      <div class="tab-pane active" id="recipes" role="tabpanel">Recipes</div>
-                      <div class="tab-pane" id="costcards" role="tabpanel">Recipes</div>
-                      <div class="tab-pane" id="settings" role="tabpanel">Settings</div>
-                </div>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                    <div class="tab-pane" id="recipes" role="tabpanel">Recipes</div>
+                    <div class="tab-pane" id="costcards" role="tabpanel">Cost Cards</div>
+                    <div class="tab-pane active" id="settings" role="tabpanel">Settings
+
+                        <form>
+                              <div class="form-group">
+                                    <label for="exampleInputEmail1">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                              </div>
+                              <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                              </div>
+                              <div class="form-group">
+                                    <label for="exampleSelect1">Example select</label>
+                                    <select class="form-control" id="exampleSelect1">
+                                          <option>1</option>
+                                          <option>2</option>
+                                          <option>3</option>
+                                          <option>4</option>
+                                          <option>5</option>
+                                    </select>
+                              </div>
+                              <div class="form-group">
+                                    <label for="exampleSelect2">Example multiple select</label>
+                                    <select multiple class="form-control" id="exampleSelect2">
+                                          <option>1</option>
+                                          <option>2</option>
+                                          <option>3</option>
+                                          <option>4</option>
+                                          <option>5</option>
+                                    </select>
+                              </div>
+                              <div class="form-group">
+                                    <label for="exampleTextarea">Example textarea</label>
+                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                              </div>
+                              <div class="form-group">
+                                    <label for="exampleInputFile">File input</label>
+                                        <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
+                                    <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
+                              </div>
+                              <fieldset class="form-group">
+                                <legend>Radio buttons</legend>
+                                <div class="form-check">
+                                      <label class="form-check-label">
+                                            <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                                            Option one is this and that&mdash;be sure to include why it's great
+                                      </label>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
+                                            Option two can be something else and selecting it will deselect option one
+                                    </label>
+                                </div>
+                                <div class="form-check disabled">
+                                    <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
+                                    Option three is disabled
+                                  </label>
+                                </div>
+                              </fieldset>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="checkbox" class="form-check-input">
+                                  Check me out
+                                </label>
+                              </div>
+                              <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                    </div>
+            </div>
 
         </div>
         <?php

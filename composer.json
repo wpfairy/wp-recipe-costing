@@ -1,5 +1,6 @@
 {
     "require": {
-        "twbs/bootstrap": "4.0.0-alpha.6"
+        "twbs/bootstrap": "4.0.0-alpha.6",
+        "guzzlehttp/guzzle": "~6.0"
     }
 }

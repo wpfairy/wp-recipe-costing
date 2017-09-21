@@ -1,33 +1,38 @@
-<?php
-/*
-   Plugin Name: WP Recipe Costing
-   Plugin URI: http://wordpress.org/extend/plugins/wpf-recipe-costing/
-   Version: 0.1
-   Author: WPFairy LLC
-   Description: 
-   Text Domain: wpf-recipe-costing
-   License: GPLv3
-  */
-
-/*
-    "WordPress Plugin Template" Copyright (C) 2017 Michael Simpson  (email : michael.d.simpson@gmail.com)
-
-    This following part of this file is part of WordPress Plugin Template for WordPress.
-
-    WordPress Plugin Template is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    WordPress Plugin Template is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Contact Form to Database Extension.
-    If not, see http://www.gnu.org/licenses/gpl-3.0.html
+<?php  
+/**
+ * Plugin Name: WP Recipe Costing
+ * 
+ * Plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the
+ * plugin admin area. This file also includes all of the dependencies used by
+ * the plugin, registers the activation and deactivation functions, and defines
+ * a function that starts the plugin.
+ *
+ * @link              https://github.com/wpfairy/wp-recipe-costing/wpf-recipe-costing/
+ * @since             0.1.1
+ * @package           WpfRecipeCosting
+ *
+ * @wordpress-plugin
+ * Plugin Name:       WP Recipe Costing
+ * Plugin URI:        https://github.com/wpfairy/wp-recipe-costing/
+ * Description:       With this plugin you can create, manage, and scale your recipes, costing cards from within WordPress. Option to import recipes from WP Ultimate Recipes.
+ * Version:           0.1.1
+ * Author:            WPFairy LLC
+ * Author URI:        https://wpfairy.com/
+ * License:           GPL-3.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
+ *
+ * @package    Wpf_Recipe_Costing
 */
+
+use Wpf_Recipe_Costing\Includes;
+use Wpf_Recipe_Costing\Includes\Admin;
+
+// If this file is accessed directory, then abort.
+if ( ! defined( 'WPINC' ) ) {
+    die;
+}
 
 $WpfRecipeCosting_minimalRequiredPhpVersion = '5.0';
 
@@ -82,4 +87,7 @@ if (WpfRecipeCosting_PhpVersionCheck()) {
     // Only load and run the init function if we know PHP version can parse it
     include_once('includes/wpf-recipe-costing_init.php');
     WpfRecipeCosting_init(__FILE__);
+    
+    // Include the autoloader so we can dynamically include the rest of the classes.
+    require_once( trailingslashit( dirname( __FILE__ ) ) . 'includes/autoload.php' );
 }

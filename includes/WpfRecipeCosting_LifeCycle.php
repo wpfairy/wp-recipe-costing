@@ -1,22 +1,6 @@
 <?php
 /*
-    "WordPress Plugin Template" Copyright (C) 2017 Michael Simpson  (email : michael.d.simpson@gmail.com)
-
-    This file is part of WordPress Plugin Template for WordPress.
-
-    WordPress Plugin Template is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    WordPress Plugin Template is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Contact Form to Database Extension.
-    If not, see http://www.gnu.org/licenses/gpl-3.0.html
+ * @package    Wpf_Recipe_Costing\Includes
 */
 
 include_once('WpfRecipeCosting_InstallIndicator.php');
@@ -121,7 +105,7 @@ class WpfRecipeCosting_LifeCycle extends WpfRecipeCosting_InstallIndicator {
      * @return void
      */
     public function addSettingsSubMenuPage() {
-        $this->addSettingsMenuPageToAdminMenu();
+        //$this->addSettingsMenuPageToAdminMenu();
         //$this->addSettingsSubMenuPageToAdminMenu();
         //$this->addSettingsSubMenuPageToPluginsMenu();
         $this->addSettingsSubMenuPageToSettingsMenu();
@@ -147,16 +131,16 @@ class WpfRecipeCosting_LifeCycle extends WpfRecipeCosting_InstallIndicator {
         add_menu_page($displayName,
                      $displayName,
                      'manage_options',
-                     $this->getSettingsSlug(),
+                     'edit.php?post_type=wpf-recipe',
                      array(&$this, 'settingsPage'),
                      'dashicons-editor-table',
                       90
                      );
         add_submenu_page( $this->getSettingsSlug(), 
-                    'Add/Edit Costing Cards', 
-                    'Add/Edit Costing Cards',
+                    'Add/Edit Cost Cards', 
+                    'Add/Edit Cost Cards',
                     'manage_options', 
-                    $this->getSettingsSlug(),
+                    'post-new.php?post_type=wpf-recipe',
                     array(&$this, 'settingsPage')
                     );
         add_submenu_page( $this->getSettingsSlug(),

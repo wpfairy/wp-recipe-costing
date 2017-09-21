@@ -1,4 +1,7 @@
 <?php
+/*
+ * @package    Wpf_Recipe_Costing\Includes\Admin
+*/
 
 class WpfRecipeCosting_SettingsPage {
 
