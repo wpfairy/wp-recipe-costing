@@ -14,20 +14,76 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
      */
     public function getOptionMetaData() {
         //  http://plugin.michael-simpson.com/?page_id=31
-        return array(
+        $options = array(
             //'_version' => array('Installed Version'), // Leave this one commented-out. Uncomment to test upgrades.
-            'wpfrc_Name' => array(__('Recipe Name', 'wpf-recipe-costing')),
-            'wpfrc_Description' => array(__('Description', 'wpf-recipe-costing'), 'false', 'true'),
-            'wpfrc_' => array(__('Which user role can do something', 'wpf-recipe-costing'),
-                                        'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber', 'Anyone') ,
-            'wpfrc_WPUR_enabled'    =>  array(__('Use Ultimate Recipe', 'wpf-recipe-costing')),
+            'CompanyName'       => array( 'description' => __( 'Company Name', $this->getPluginTextDomain() ),
+                                        'formElement'   => array(
+                                            'type'      => 'text'
+                                             )
+                                        ),
+            'CompanyLogo'       => array( 'description' => __( 'Company Logo', $this->getPluginTextDomain() ),
+                                        'formElement'   => array(
+                                            'type'      => 'file'
+                                             )
+                                        ),
+            'TargetFoodCost'    => array( 'description' => __( 'Target food cost (percentage)', $this->getPluginTextDomain() ),
+                                       'formElement'  => array(
+                                            'type'      => 'number',
+                                            'disabled' => false,
+                                            'max'      => '100',
+                                            'maxlength'=> '',
+                                            'min'      => '1',
+                                            'pattern'  => '[0-9]',
+                                            'readonly' => false,
+                                            'required' => false,
+                                            'size'     => '',
+                                            'step'     => '',
+                                            'value'    => '20'
+                                            )
+                                         ),
+            'DeleteAllData'      => array( 'description' => __( 'Delete all WP Recipe Costing data', $this->getPluginTextDomain() ),
+                                        'formElement'  => array(
+                                            'type'          => 'select',
+                                            'subtext'       => 'Defaults to blogname.',
+                                            'value'         => array( 'Delete All Data' ),
+                                            'disabled' => false,
+                                            'max'      => '1000',
+                                            'maxlength'=> '4',
+                                            'min'      => '1',
+                                            'pattern'  => '5',
+                                            'readonly' => false,
+                                            'required' => false,
+                                            'size'     => '1000',
+                                            'step'     => '5'
+                                             )
+                                         ),
+            'WPUR_enable'      => array( 'description' => __( 'Enable Ultimate Recipe', $this->getPluginTextDomain() ),
+                                         'formElement'  => array(
+                                            'type'      => 'radio',
+                                            'value'   => array( 'Enable', 'Disable' )
+                                             )
+                                         ),
+            'UserRole'          => array( 'description' => __( 'Minimum user role (for editing settings and data)', $this->getPluginTextDomain() ),
+                                         'formElement'  => array(
+                                            'type'      => 'select', 
+                                            'value'   => array( 'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber', 'Anyone' )
+                                             )
+                                         ),
+            
+            'Checkbox'          => array( 'description' => __('Checkbox Example', $this->getPluginTextDomain() ),
+                                         'formElement'  => array(
+                                            'type'      => 'checkbox',
+                                            'value'   => array( 'Option 1', 'Option 2', 'Option 3', 'Option 4' )
+                                             )
+                                         )
         );
+        return $options;
     }
 
-//    protected function getOptionValueI18nString($optionValue) {
-//        $i18nValue = parent::getOptionValueI18nString($optionValue);
-//        return $i18nValue;
-//    }
+    protected function getOptionValueI18nString($optionValue) {
+        $i18nValue = parent::getOptionValueI18nString($optionValue);
+        return $i18nValue;
+    }
 
     protected function initOptions() {
         $options = $this->getOptionMetaData();
@@ -40,6 +96,10 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
         }
     }
 
+    public function getPluginTextDomain() {
+        return 'wpf-recipe-costing';
+    }
+    
     public function getPluginDisplayName() {
         return 'WP Recipe Costing';
     }
@@ -81,6 +141,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
      * @return void
      */
     public function upgrade() {
+        
     }
     
 
@@ -120,7 +181,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             'label'                 => __( 'Cost Card', 'wpf-recipe-costing' ),
             'description'           => __( 'Cost Card post type for WP Recipe Costing', 'wpf-recipe-costing' ),
             'labels'                => $labels,
-            'supports'              => array( 'title', 'editor', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes', 'thumbnail', 'custom-fields', 'post-formats' ),
+            'supports'              => array( 'title', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'thumbnail', 'custom-fields', 'post-formats' ),
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
@@ -177,7 +238,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             'label'                 => __( 'Recipe', 'wpf-recipe-costing' ),
             'description'           => __( 'Recipe post type for WP Recipe Costing', 'wpf-recipe-costing' ),
             'labels'                => $labels,
-            'supports'              => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'revisions', 'page-attributes' ),
+            'supports'              => array( 'title', 'excerpt', 'author', 'thumbnail', 'revisions' ),
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
@@ -202,10 +263,212 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
         register_post_type( 'wpf-recipe', $args );
     }
 
+    public function register_custom_fields() {
+        
+        if( function_exists('acf_add_local_field_group') ):
+
+            acf_add_local_field_group(array (
+                'key' => 'group_59c2e2b57a180',
+                'title' => 'Recipe',
+                'fields' => array (
+                    array (
+                        'key' => 'field_59c309f6185bb',
+                        'label' => 'Ingredients',
+                        'name' => 'ingredients',
+                        'type' => 'repeater',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array (
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'collapsed' => '',
+                        'min' => 0,
+                        'max' => 0,
+                        'layout' => 'table',
+                        'button_label' => '',
+                        'sub_fields' => array (
+                            array (
+                                'key' => 'field_59c30a2b185bd',
+                                'label' => 'quantity',
+                                'name' => 'quantity',
+                                'type' => 'number',
+                                'instructions' => '',
+                                'required' => 0,
+                                'conditional_logic' => 0,
+                                'wrapper' => array (
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'placeholder' => 2,
+                                'prepend' => '',
+                                'append' => '',
+                                'min' => '',
+                                'max' => '',
+                                'step' => '',
+                            ),
+                            array (
+                                'key' => 'field_59c30a38185be',
+                                'label' => 'unit',
+                                'name' => 'unit',
+                                'type' => 'select',
+                                'instructions' => '',
+                                'required' => 0,
+                                'conditional_logic' => 0,
+                                'wrapper' => array (
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'choices' => array (
+                                    'mm3' => 'mm3',
+                                    'cm3' => 'cm3',
+                                    'ml' => 'ml',
+                                    'l' => 'l',
+                                    'kl' => 'kl',
+                                    'm3' => 'm3',
+                                    'km3' => 'km3',
+                                    'tsp' => 'tsp',
+                                    'tbsp' => 'tbsp',
+                                    'in3' => 'in3',
+                                    'fl-oz' => 'fl-oz',
+                                    'cup' => 'cup',
+                                    'pnt' => 'pnt',
+                                    'qt' => 'qt',
+                                    'gal' => 'gal',
+                                    'ft3' => 'ft3',
+                                    'yd3' => 'yd3',
+                                    'mcg' => 'mcg',
+                                    'mg' => 'mg',
+                                    'g' => 'g',
+                                    'kg' => 'kg',
+                                    'oz' => 'oz',
+                                    'lb' => 'lb',
+                                ),
+                                'default_value' => array (
+                                ),
+                                'allow_null' => 0,
+                                'multiple' => 0,
+                                'ui' => 0,
+                                'ajax' => 0,
+                                'return_format' => 'value',
+                                'placeholder' => '',
+                            ),
+                            array (
+                                'key' => 'field_59c30a11185bc',
+                                'label' => 'ingredient',
+                                'name' => 'ingredient',
+                                'type' => 'text',
+                                'instructions' => '',
+                                'required' => 0,
+                                'conditional_logic' => 0,
+                                'wrapper' => array (
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'placeholder' => 'parsley',
+                                'prepend' => '',
+                                'append' => '',
+                                'maxlength' => '',
+                            ),
+                        ),
+                    ),
+                    array (
+                        'key' => 'field_59c30ad3185bf',
+                        'label' => 'Instructions',
+                        'name' => 'instructions',
+                        'type' => 'repeater',
+                        'instructions' => '',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array (
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'collapsed' => '',
+                        'min' => 0,
+                        'max' => 0,
+                        'layout' => 'table',
+                        'button_label' => '',
+                        'sub_fields' => array (
+                            array (
+                                'key' => 'field_59c325706a5ef',
+                                'label' => 'Step',
+                                'name' => 'step',
+                                'type' => 'text',
+                                'instructions' => '',
+                                'required' => 0,
+                                'conditional_logic' => 0,
+                                'wrapper' => array (
+                                    'width' => '',
+                                    'class' => '',
+                                    'id' => '',
+                                ),
+                                'default_value' => '',
+                                'placeholder' => '',
+                                'prepend' => '',
+                                'append' => '',
+                                'maxlength' => '',
+                            ),
+                        ),
+                    ),
+                ),
+                'location' => array (
+                    array (
+                        array (
+                            'param' => 'post_type',
+                            'operator' => '==',
+                            'value' => 'wpf-recipe',
+                        ),
+                    ),
+                ),
+                'menu_order' => 0,
+                'position' => 'normal',
+                'style' => 'default',
+                'label_placement' => 'top',
+                'instruction_placement' => 'label',
+                'hide_on_screen' => '',
+                'active' => 1,
+                'description' => '',
+            ));
+
+            endif;
+        
+        
+    }
     
     function enqueueScripts() {
-        //wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/script.js', __FILE__));
+        // Adding scripts & styles to all pages
+        //wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/main.js', __FILE__));
+        wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/build.js', __FILE__));
         //wp_enqueue_style('wpf-recipe-costing-style', plugins_url('/assets/css/style.css', __FILE__)); 
+        
+        // enqueuing Bootstrap css and js file
+//        wp_enqueue_scripts('bootstrap-js');
+//        wp_register_script('bootstrap-js', 
+//                    plugin_dir_url( __FILE__ ) . '/vendor/bootstrap-4.0.0-alpha.6-dist/js/bootstrap.min.js', 
+//                    array ('jquery'), 
+//                    false, false);
+//        wp_enqueue_style('bootstrap-css', plugin_dir_url( __FILE__ ) . '/vendor/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css'); 
+
+
+        // enqueuing bootstrap-tabs.js file
+//        wp_enqueue_scripts('bootstrap-tabs');
+//        wp_register_script('bootstrap-tabs', 
+//                    plugins_url('/assets/js/bootstrap-tabs.js'), 
+//                    array ('jquery'), 
+//                    false, false);
+        
+        // enqueuing vue.js file
+//        wp_register_script('vue-js', plugins_url('/node_modules/dist/vue.js', __FILE__));
+//        wp_enqueue_scripts('vue-js');
         
     }
 
@@ -217,39 +480,21 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
 
         // Add custom post_type
         add_action( 'init', array( &$this, 'register_custom_post_type' ) );
+        //add_action( 'init', array( &$this, 'register_custom_fields' ) );
 
         // Example adding a script & style just for the options administration page
         // http://plugin.michael-simpson.com/?page_id=47
-        if (strpos($_SERVER['REQUEST_URI'], $this->getSettingsSlug()) !== false) {
-            add_action('wp_enqueue_scripts', array($this, 'enqueueScripts'));
-        }
+        //if (strpos($_SERVER['REQUEST_URI'], $this->getSettingsSlug()) !== false) {
+            add_action( 'wp_enqueue_scripts', array($this, 'enqueueScripts') );
+            //add_action( 'admin_enqueue_scripts', array($this, 'register_all_admin_scripts') );
+        //}
 
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
 
-
-        // Adding scripts & styles to all pages
-        // Examples:
-        //        wp_enqueue_script('jquery');
-        //        wp_enqueue_style('wpf-recipe-costing-style', plugins_url('/assets/css/style.css', __FILE__));
-        //        wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/script.js', __FILE__));
-        // enqueuing Bootstrap css and js file
-        wp_enqueue_scripts('bootstrap-js');
-        wp_register_script('bootstrap-js', 
-                    plugins_url('../vendor/bootstrap-4.0.0-alpha.6-dist/js/bootstrap.min.js'), 
-                    array ('jquery'), 
-                    false, false);
-        wp_enqueue_style('bootstrap-css', plugins_url('../vendor/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css', __FILE__)); 
-
-
-        // enqueuing bootstrap-tabs.js file
-        wp_enqueue_scripts('bootstrap-tabs');
-        wp_register_script('bootstrap-tabs', 
-                    plugins_url('/assets/js/bootstrap-tabs.js'), 
-                    array ('jquery'), 
-                    false, false);
-
+        
+        
         // Register short codes
         // http://plugin.michael-simpson.com/?page_id=39
 

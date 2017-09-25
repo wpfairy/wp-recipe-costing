@@ -4,11 +4,18 @@
   "description": "=== WP Recipe Costing ===\r Contributors: WPFairy LLC\r Donate link:\r Tags:\r License: GPLv3\r License URI: http://www.gnu.org/licenses/gpl-3.0.html\r Requires at least: 3.5\r Tested up to: 3.5\r Stable tag: 0.1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-js": "browserify -t vueify -e src/js/main.js -o assets/js/build.js",
+  "watch-js": "watchify -v -t vueify -e src/js/main.js -o assets/js/build.js"
   },
   "author": "WPFairy LLC",
   "license": "ISC",
   "devDependencies": {
     "convert-units": "^2.3.1"
+  },
+  "dependencies": {
+    "vue": "^2.4.4",
+    "vueify": "^9.4.1",
+    "vuejs": "^1.0.29"
   }
 }

@@ -11,7 +11,7 @@
  *
  * @link              https://github.com/wpfairy/wp-recipe-costing/wpf-recipe-costing/
  * @since             0.1.1
- * @package           WpfRecipeCosting
+ * @package           Wpf_Recipe_Costing
  *
  * @wordpress-plugin
  * Plugin Name:       WP Recipe Costing
@@ -22,8 +22,8 @@
  * Author URI:        https://wpfairy.com/
  * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       wpf-recipe-costing
  *
- * @package    Wpf_Recipe_Costing
 */
 
 use Wpf_Recipe_Costing\Includes;

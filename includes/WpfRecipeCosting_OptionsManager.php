@@ -42,6 +42,7 @@ class WpfRecipeCosting_OptionsManager {
      * @return void
      */
     protected function initOptions() {
+        
     }
 
     /**
@@ -249,22 +250,87 @@ class WpfRecipeCosting_OptionsManager {
         if (!current_user_can('manage_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'wpf-recipe-costing'));
         }
-        
-        $displayName = $this->getPluginDisplayName();
+
         $optionMetaData = $this->getOptionMetaData();
         
-        // AJAX
-        //$plainUrl = $this->getAjaxUrl('ajaxCONVERTUNITS');
-        //$urlWithId = $this->getAjaxUrl('ajaxCONVERTUNITS&id=MyId');
-
-//        $myId=0;
-//        $myLat='x';
-//        $myLng='y';
+        //print_r( $optionMetaData );
         
-        // More sophisticated:
-//        $parametrizedUrl = $this->getAjaxUrl('ajaxCONVERTUNITS&id=%s&lat=%s&lng=%s');
-//        $urlWithParamsSet = sprintf($parametrizedUrl, urlencode($myId), urlencode($myLat), urlencode($myLng));
+//        echo '<ul>';
+//        foreach ( $optionMetaData as $parent ) {
+//            
+//            //print_r( $parent );
+//            //echo $optionMetaData[$parent];
+//            foreach ( $parent as $key => $value ) {
+//                if ( !is_array( $key ) ) {
+//                    //print_r( $value );
+//                    echo '<li>'.$key.': '.$value .'</li>';
+//                    //$choices = 
+//                } else {
+//                    echo '<ul>';
+//                    foreach ( $child as $key2 => $value2 ) {
+//                        echo '<li>'.$key2.': '.$value2 .'</li>';
+//                    }
+//                    echo '</ul>';
+//                }
+//                
+//            }
+//            
+//        }
+//        echo '</ul>';
+        
+        //$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($optionMetaData));
+        
 
+        function iterator(&$complex_array){
+
+            foreach ($complex_array as $key => $value) {
+
+                if (is_array($value)) {
+                    
+                    echo "<p>[".$key."]</p>";
+                    iterator($value);
+                    
+                } else {
+                    
+                    echo "<li> [".$key."] ".$value .'</li>';
+                    if ( $key == 'format') {
+                        $aOptionFormat = $complex_array[$key];
+                        echo $aOptionFormat;
+                    }
+                    
+                }
+            }
+        }
+        //iterator($optionMetaData);
+        
+        //var_dump(array_keys($this->getOptionMetaData()));
+        //var_dump($this->getOptionMetaData());
+        
+        function recurseMetaArray(&$optionMetaData) {
+            foreach ($optionMetaData as $aOptionKey => $aOptionMeta) {
+                $aOptions = "";
+                if (is_array($aOptionMeta)) {
+                    echo "<p>[".$aOptionKey."]</p>";
+                    //$aOptions = "";
+                    recurseMetaArray($aOptionMeta);
+                } else {
+                    //echo "<li> [".$aOptionKey."] ".$aOptionMeta .'</li>';
+                    if ( $aOptionKey == 'format' ) {
+                        $aOptionFormat = $optionMetaData[$aOptionKey];
+                        echo "[format]<li>".$aOptionFormat."</li>";
+                    }
+                    if ( $aOptionKey == 'choices' ) {
+                        $aOptions = array($aOptions, $optionMetaData[$aOptionKey]);
+                        echo '[choices] ';
+                        foreach ( $aOptions as $k => $v ) {
+                            echo "<li> [".$k."] ".$v .'</li>';
+                        }
+                    }
+                }
+            }
+        }
+        //recurseMetaArray($optionMetaData);
+        
 
         // Save Posted Options
         if ($optionMetaData != null) {
@@ -278,104 +344,79 @@ class WpfRecipeCosting_OptionsManager {
         // HTML for the page
         $settingsGroup = get_class($this) . '-settings-group';
         ?>
-        <div class="wrap container">
-            <h2><?php _e($displayName . ' Settings', 'wpf-recipe-costing'); ?></h2>
-     
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                  <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#recipes" role="tab">Recipes</a>
-                  </li>
-                  <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#costcards" role="tab">Cost Cards</a>
-                  </li>
-                  <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#settings" role="tab">Settings</a>
-                  </li>
-            </ul>
+        <div class="wrap">
+            <h2><?php _e('WP Recipe Costing Settings', 'wpf-recipe-costing'); ?></h2>
+            <table cellspacing="1" cellpadding="2"><tbody>
+            <tr><td><?php _e('System', 'wpf-recipe-costing'); ?></td><td><?php echo php_uname(); ?></td></tr>
+            <tr><td><?php _e('PHP Version', 'wpf-recipe-costing'); ?></td>
+                <td><?php echo phpversion(); ?>
+                <?php
+                if (version_compare('5.2', phpversion()) > 0) {
+                    echo '&nbsp;&nbsp;&nbsp;<span style="background-color: #ffcc00;">';
+                    _e('(WARNING: This plugin may not work properly with versions earlier than PHP 5.2)', 'wpf-recipe-costing');
+                    echo '</span>';
+                }
+                ?>
+                </td>
+            </tr>
+            <tr><td><?php _e('MySQL Version', 'wpf-recipe-costing'); ?></td>
+                <td><?php echo $this->getMySqlVersion() ?>
+                    <?php
+                    echo '&nbsp;&nbsp;&nbsp;<span style="background-color: #ffcc00;">';
+                    if (version_compare('5.0', $this->getMySqlVersion()) > 0) {
+                        _e('(WARNING: This plugin may not work properly with versions earlier than MySQL 5.0)', 'wpf-recipe-costing');
+                    }
+                    echo '</span>';
+                    ?>
+                </td>
+            </tr>
+            </tbody></table>
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                    <div class="tab-pane" id="recipes" role="tabpanel">Recipes</div>
-                    <div class="tab-pane" id="costcards" role="tabpanel">Cost Cards</div>
-                    <div class="tab-pane active" id="settings" role="tabpanel">Settings
+            <h2><?php echo $this->getPluginDisplayName(); echo ' '; _e('Settings', 'wpf-recipe-costing'); ?></h2>
 
-                        <form>
-                              <div class="form-group">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                              </div>
-                              <div class="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                              </div>
-                              <div class="form-group">
-                                    <label for="exampleSelect1">Example select</label>
-                                    <select class="form-control" id="exampleSelect1">
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                    </select>
-                              </div>
-                              <div class="form-group">
-                                    <label for="exampleSelect2">Example multiple select</label>
-                                    <select multiple class="form-control" id="exampleSelect2">
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                    </select>
-                              </div>
-                              <div class="form-group">
-                                    <label for="exampleTextarea">Example textarea</label>
-                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                              </div>
-                              <div class="form-group">
-                                    <label for="exampleInputFile">File input</label>
-                                        <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-                                    <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
-                              </div>
-                              <fieldset class="form-group">
-                                <legend>Radio buttons</legend>
-                                <div class="form-check">
-                                      <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                                            Option one is this and that&mdash;be sure to include why it's great
-                                      </label>
-                                </div>
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
-                                            Option two can be something else and selecting it will deselect option one
-                                    </label>
-                                </div>
-                                <div class="form-check disabled">
-                                    <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
-                                    Option three is disabled
-                                  </label>
-                                </div>
-                              </fieldset>
-                              <div class="form-check">
-                                <label class="form-check-label">
-                                  <input type="checkbox" class="form-check-input">
-                                  Check me out
-                                </label>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                    </div>
-            </div>
-
+            <form method="post" action="">
+                <?php settings_fields($settingsGroup); ?>
+                <style type="text/css">
+                    table.plugin-options-table {width: 100%; }
+                    table.plugin-options-table tr:nth-child(even) {background: #f9f9f9}
+                    table.plugin-options-table tr:nth-child(odd) {background: #FFF}
+                    table.plugin-options-table td { width: 50%}
+                    table.plugin-options-table td > div > p {padding: 1em;}
+                </style>
+                <table class="plugin-options-table">
+                    <tbody>
+                    <?php
+                    if ( $optionMetaData != null ) {
+                        foreach ( $optionMetaData as $aOptionKey => $aOptionMeta ) {     
+                            ?>
+                            <tr valign="top">
+                                <th scope="row">
+                                    <div>
+                                        <p><label for="<?php echo $aOptionKey ?>"><?php echo $aOptionMeta['description']; ?></label></p>
+                                    </div>
+                                </th>
+                                <td>
+                                    <?php $this->createFormElement( $aOptionKey, $aOptionMeta ); ?>
+                                </td>
+                            </tr>
+                        
+                        <?php
+                        }                        
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                <div class="submit">
+                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'wpf-recipe-costing') ?>"/>
+                </div>
+                                  
+            </form>
         </div>
         <?php
 
     }
 
+  
     /**
      * Helper-function outputs the correct form element (input tag, select tag) for the given item
      * @param  $aOptionKey string name of the option (un-prefixed)
@@ -383,29 +424,203 @@ class WpfRecipeCosting_OptionsManager {
      * @param  $savedOptionValue string current value for $aOptionKey
      * @return void
      */
-    protected function createFormControl($aOptionKey, $aOptionMeta, $savedOptionValue) {
-        if (is_array($aOptionMeta) && count($aOptionMeta) >= 2) { // Drop-down list
-            $choices = array_slice($aOptionMeta, 1);
-            ?>
-            <p><select name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>">
-            <?php
-                            foreach ($choices as $aChoice) {
-                $selected = ($aChoice == $savedOptionValue) ? 'selected' : '';
-                ?>
-                    <option value="<?php echo $aChoice ?>" <?php echo $selected ?>><?php echo $this->getOptionValueI18nString($aChoice) ?></option>
-                <?php
-            }
-            ?>
-            </select></p>
-            <?php
+    protected function createFormControl( $aOptionKey, $aOptionMeta ) {
+        
+        $savedOptionValue = $this->getOption( $aOptionKey );
 
+        if ( is_array( $aOptionMeta ) && count( $aOptionMeta ) >= 2 && array_key_exists('choices', $aOptionMeta) ) {
+                
+            $choices = $aOptionMeta['choices'];
+            $savedOptionValue = $this->getOptionValueI18nString( $aChoice );
+            
+                switch( $aOptionMeta['formElement']['format'] ) {
+                    case 'input': 
+                        // Simple input field
+                        ?>
+                        <div id="" class="form-group">
+                            <input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
+                        </div>
+                        <?php break;
+                    case 'select': 
+                        // Drop-down list
+                        ?>
+                        <div id="" class="form-group">
+                            <select name="<?php echo $aOptionKey; ?>" id="<?php echo $aOptionKey; ?>">
+                            <?php foreach ( $choices as $aChoice ) { 
+                            
+                                $selected = ($aChoice == $savedOptionValue) ? 'selected' : '';?>
+                                
+                                <option value="<?php echo $aChoice; ?>" <?php echo $selected; ?>><?php echo $savedOptionValue; ?></option>
+                                
+                            <?php } ?>
+                            </select>
+                        </div>
+                        <?php break;
+                    case 'checkbox':
+                        ?>
+                        <div id="" class="form-group">
+                        <label class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">Check this custom checkbox</span>
+                        </label>
+                        </div>
+                        <?php break;
+                    case 'radio':
+                        ?>
+                        <div id="" class="form-group">
+                        <label class="custom-control custom-radio">
+                          <input id="radio1" name="radio" type="radio" class="custom-control-input">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">Toggle this custom radio</span>
+                        </label>
+                        <label class="custom-control custom-radio">
+                          <input id="radio2" name="radio" type="radio" class="custom-control-input">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">Or toggle this other custom radio</span>
+                        </label>
+                        </div>
+                        <?php break;
+                    default: // Simple input field
+                        ?>
+                        <div id="" class="form-group">
+                            <input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
+                        </p>
+                        <?php
+                
+            } 
         }
-        else { // Simple input field
-            ?>
-            <p><input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>"
-                      value="<?php echo esc_attr($savedOptionValue) ?>" size="50"/></p>
-            <?php
+    }
+    
+    /**
+     * Helper-function outputs the correct form element (input tag, select tag) for the given item
+     * @param  $aOptionKey string name of the option (un-prefixed)
+     * @param  $aOptionMeta mixed meta-data for $aOptionKey (either a string display-name or an array(display-name, option1, option2, ...)
+     * @param  $savedOptionValue string current value for $aOptionKey
+     * @return $formElementPrepend
+     */
+    protected function createFormElement( $aOptionKey, $aOptionMeta ) {
 
+        if ( is_array( $aOptionMeta ) ) {
+            var_dump($aOptionMeta);
+            
+            if ( array_key_exists('description', $aOptionMeta) )    { $elementName = $aOptionMeta['description']; }        
+            if ( array_key_exists('type', $aOptionMeta) )           { $elementType = $aOptionMeta['formElement']['type']; }
+            if ( array_key_exists('value', $aOptionMeta) )          { $elementValue = $aOptionMeta['formElement']['value']; }
+            if ( array_key_exists('info', $aOptionMeta) )           { $elementInfo = $aOptionMeta['formElement']['info']; }
+            if ( array_key_exists('subtext', $aOptionMeta) )        { $elementSubtext = $aOptionMeta['formElement']['subtext']; }
+            if ( array_key_exists('placeholder', $aOptionMeta) )    { $elementPlaceholder = $aOptionMeta['formElement']['placeholder']; }
+            if ( array_key_exists('tooltip', $aOptionMeta) )        { $elementTooltip = $aOptionMeta['formElement']['tooltip']; }
+            
+            
+            //if ( !isset($elementValue) )    { $elementValue = $elementName; }
+            //if ( !isset($elementType) )     { $elementType = 'text'; }
+            
+            
+            $savedOptionValue = get_option( $this->prefix($aOptionKey) );
+            $formElementPrepend = '<div class="form-group">';
+            $elementPrepend     = '<div id="form-element-'. $elementName .'" class="form-group">';
+            $elementAppend      = '</div>';
+            $formElementAppend  = '</div>';
+            
+            $formGroupLabel     = '<label class="form-element-label" id="form-element-'.$aOptionKey.'-label">'.$elementName.'</label>';
+            $formElement        = '<input id="'.$elementName.'" class="" type="">';
+            
+            
+            if ( is_array( $elementValue ) ) {
+                
+                switch( $elementType ) {
+                        
+                    case 'select': 
+                        // Drop-down list
+                        ?>
+                        <select name="<?php echo $elementType; ?>" id="form-element-<?php echo $aOptionKey; ?>">
+                        <?php 
+
+                        foreach ( $elementValue as $choice ) { 
+
+                            $savedOptionValue = $this->getOptionValueI18nString( $choice );
+                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; ?>
+
+                            <option value="<?php echo $choice; ?>" <?php echo $selected; ?>><?php echo $savedOptionValue; ?></option>
+                            
+                        <?php } ?>
+                            
+                        </select>
+
+                        <?php break;
+                        
+                    case 'radio':
+                        ?>
+                        <select name="<?php echo $elementType; ?>" id="form-element-<?php echo $aOptionKey; ?>">
+                        <?php 
+
+                        foreach ( $elementValue as $choice ) { 
+                            
+                            $savedOptionValue = $this->getOptionValueI18nString( $choice );
+                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; ?>
+                            
+                            <label class="custom-control custom-radio">
+                              <input id="" name="radio" type="radio" class="custom-control-input" <?php echo $selected; ?>><?php echo $savedOptionValue; ?>
+                              <span class="custom-control-indicator"></span>
+                              <span class="custom-control-description"><?php echo $elementValue ?></span>
+                            </label>
+                            
+                        <?php } ?>
+                        <?php break;
+                        
+                }
+                
+            } else {
+                
+                switch( $elementType ) {
+                    case 'text': 
+                    case 'email':
+                        // input field
+                        //$formElement = '<input type="'.$elementType.'" name="'. $elementName .'" id="'. $elementName .'" value="' . $elementValue. '" autocomplete="on" />';
+                        ?>
+
+                            <input type="<?php echo $elementType; ?>" 
+                                   class="form-control" 
+                                   id="form-input-<?php echo $aOptionKey; ?>" value="<?php echo $savedOptionValue; ?>"
+                                   <?php 
+                                    if (isset($elementPlaceholder)) { 
+                                        echo 'placeholder="$elementPlaceholder" ';
+                                   } ?>
+                                   autocomplete="on" 
+                                   >
+                        
+                        <?php if ( isset($elementSubtext) ) : ?>
+                            
+                        <small id="<?php echo $elementSubtext ?>"><?php echo $elementSubtext ?></small>
+                        
+                        <?php endif; ?>
+                        <?php break;
+
+                    case 'checkbox':
+                        ?>
+                        <label class="custom-control custom-checkbox">
+                          <input type="checkbox" class="custom-control-input">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">Check this custom checkbox</span>
+                        </label>
+                        <?php break;
+                    //default: // input field
+                        ?>
+                        <input type="<?php echo $elementType ?>" name="<?php echo $elementType ?>" id="form-element-<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
+
+                    <?php
+                
+                }
+                
+            
+            
+            
+            }
+            //return $formElementPrepend . $elementPrepend . $formGroupLabel . $formElement . $elementAppend . $formElementAppend;
+        } else {
+            // this should not happen, $aOptionMeta should always be an array
+            echo 'Uh oh! aOptionMeta should be an array. Check '.$this->getOptionNamePrefix(). '_Plugin.php to make sure your Options are configured correctly.';
         }
     }
 
@@ -429,7 +644,6 @@ class WpfRecipeCosting_OptionsManager {
                 return __('true', 'wpf-recipe-costing');
             case 'false':
                 return __('false', 'wpf-recipe-costing');
-
             case 'Administrator':
                 return __('Administrator', 'wpf-recipe-costing');
             case 'Editor':
