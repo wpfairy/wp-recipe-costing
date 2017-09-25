@@ -502,11 +502,22 @@ class WpfRecipeCosting_OptionsManager {
     protected function createFormElement( $aOptionKey, $aOptionMeta ) {
 
         if ( is_array( $aOptionMeta ) ) {
-            var_dump($aOptionMeta);
             
-            if ( array_key_exists('description', $aOptionMeta) )    { $elementName = $aOptionMeta['description']; }        
-            if ( array_key_exists('type', $aOptionMeta) )           { $elementType = $aOptionMeta['formElement']['type']; }
-            if ( array_key_exists('value', $aOptionMeta) )          { $elementValue = $aOptionMeta['formElement']['value']; }
+//            print_r( $aOptionMeta['formElement']['type']);
+//            var_dump($aOptionMeta);
+            
+            if ( array_key_exists('description', $aOptionMeta) )    { $elementName = $aOptionMeta['description']; }  
+            
+            if ( array_key_exists('type', $aOptionMeta) || isset($aOptionMeta['formElement']['type']) ) { 
+                $elementType = $aOptionMeta['formElement']['type']; 
+                //echo $elementType;
+            }
+                
+            if ( array_key_exists('value', $aOptionMeta) || isset($aOptionMeta['formElement']['value']) ) { 
+                $elementValue = $aOptionMeta['formElement']['value']; 
+                //print_r( $elementValue );
+            }
+            
             if ( array_key_exists('info', $aOptionMeta) )           { $elementInfo = $aOptionMeta['formElement']['info']; }
             if ( array_key_exists('subtext', $aOptionMeta) )        { $elementSubtext = $aOptionMeta['formElement']['subtext']; }
             if ( array_key_exists('placeholder', $aOptionMeta) )    { $elementPlaceholder = $aOptionMeta['formElement']['placeholder']; }
@@ -551,20 +562,21 @@ class WpfRecipeCosting_OptionsManager {
                         <?php break;
                         
                     case 'radio':
+                    case 'radio-stacked':
                         ?>
-                        <select name="<?php echo $elementType; ?>" id="form-element-<?php echo $aOptionKey; ?>">
+                        <div class="custom-controls-stacked">
                         <?php 
 
-                        foreach ( $elementValue as $choice ) { 
+                        foreach ( $elementValue as $value ) { 
                             
-                            $savedOptionValue = $this->getOptionValueI18nString( $choice );
-                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; ?>
+                            $savedOptionValue = $this->getOptionValueI18nString( $value );
+                            $selected = ($value == $savedOptionValue) ? 'selected' : ''; ?>
                             
-                            <label class="custom-control custom-radio">
-                              <input id="" name="radio" type="radio" class="custom-control-input" <?php echo $selected; ?>><?php echo $savedOptionValue; ?>
-                              <span class="custom-control-indicator"></span>
-                              <span class="custom-control-description"><?php echo $elementValue ?></span>
-                            </label>
+                              <label class="custom-control custom-radio">
+                                <input id="radioStacked1" name="radio-stacked" type="radio" class="custom-control-input" <?php echo $selected; ?>>
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"><?php echo $value ?></span>
+                              </label>
                             
                         <?php } ?>
                         <?php break;
@@ -602,10 +614,19 @@ class WpfRecipeCosting_OptionsManager {
                         <label class="custom-control custom-checkbox">
                           <input type="checkbox" class="custom-control-input">
                           <span class="custom-control-indicator"></span>
-                          <span class="custom-control-description">Check this custom checkbox</span>
+                          <span class="custom-control-description"><?php echo $elementValue; ?></span>
                         </label>
                         <?php break;
-                    //default: // input field
+                    case 'file':
+                        ?>
+                            
+                        <label class="custom-file">
+                          <input type="file" id="file" class="custom-file-input">
+                          <span class="custom-file-control"></span>
+                        </label>
+                        
+                        <?php break;
+                    default: // input field
                         ?>
                         <input type="<?php echo $elementType ?>" name="<?php echo $elementType ?>" id="form-element-<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
 

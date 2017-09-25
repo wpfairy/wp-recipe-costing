@@ -18,17 +18,20 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             //'_version' => array('Installed Version'), // Leave this one commented-out. Uncomment to test upgrades.
             'CompanyName'       => array( 'description' => __( 'Company Name', $this->getPluginTextDomain() ),
                                         'formElement'   => array(
-                                            'type'      => 'text'
+                                            'type'      => 'text',
+                                            'value'     => ''
                                              )
                                         ),
             'CompanyLogo'       => array( 'description' => __( 'Company Logo', $this->getPluginTextDomain() ),
                                         'formElement'   => array(
-                                            'type'      => 'file'
+                                            'type'      => 'file',
+                                            'value'     => ''
                                              )
                                         ),
             'TargetFoodCost'    => array( 'description' => __( 'Target food cost (percentage)', $this->getPluginTextDomain() ),
                                        'formElement'  => array(
                                             'type'      => 'number',
+                                            'value'     => '',
                                             'disabled' => false,
                                             'max'      => '100',
                                             'maxlength'=> '',
@@ -43,9 +46,9 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
                                          ),
             'DeleteAllData'      => array( 'description' => __( 'Delete all WP Recipe Costing data', $this->getPluginTextDomain() ),
                                         'formElement'  => array(
-                                            'type'          => 'select',
+                                            'type'          => 'checkbox',
                                             'subtext'       => 'Defaults to blogname.',
-                                            'value'         => array( 'Delete All Data' ),
+                                            'value'         => 'Delete All Data' ,
                                             'disabled' => false,
                                             'max'      => '1000',
                                             'maxlength'=> '4',
@@ -57,9 +60,9 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
                                             'step'     => '5'
                                              )
                                          ),
-            'WPUR_enable'      => array( 'description' => __( 'Enable Ultimate Recipe', $this->getPluginTextDomain() ),
+            'WPUR_enable'      => array( 'description' => __( 'Enable WP Ultimate Recipe', $this->getPluginTextDomain() ),
                                          'formElement'  => array(
-                                            'type'      => 'radio',
+                                            'type'      => 'radio-stacked',
                                             'value'   => array( 'Enable', 'Disable' )
                                              )
                                          ),
@@ -67,13 +70,6 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
                                          'formElement'  => array(
                                             'type'      => 'select', 
                                             'value'   => array( 'Administrator', 'Editor', 'Author', 'Contributor', 'Subscriber', 'Anyone' )
-                                             )
-                                         ),
-            
-            'Checkbox'          => array( 'description' => __('Checkbox Example', $this->getPluginTextDomain() ),
-                                         'formElement'  => array(
-                                            'type'      => 'checkbox',
-                                            'value'   => array( 'Option 1', 'Option 2', 'Option 3', 'Option 4' )
                                              )
                                          )
         );
