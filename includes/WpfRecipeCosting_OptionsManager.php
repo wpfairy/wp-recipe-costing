@@ -374,43 +374,41 @@ class WpfRecipeCosting_OptionsManager {
 
             <h2><?php echo $this->getPluginDisplayName(); echo ' '; _e('Settings', 'wpf-recipe-costing'); ?></h2>
 
-            <form method="post" action="">
-                <?php settings_fields($settingsGroup); ?>
-                <style type="text/css">
-                    table.plugin-options-table {width: 100%; }
-                    table.plugin-options-table tr:nth-child(even) {background: #f9f9f9}
-                    table.plugin-options-table tr:nth-child(odd) {background: #FFF}
-                    table.plugin-options-table td { width: 50%}
-                    table.plugin-options-table td > div > p {padding: 1em;}
-                </style>
-                <table class="plugin-options-table">
-                    <tbody>
-                    <?php
-                    if ( $optionMetaData != null ) {
-                        foreach ( $optionMetaData as $aOptionKey => $aOptionMeta ) {     
-                            ?>
-                            <tr valign="top">
-                                <th scope="row">
-                                    <div>
-                                        <p><label for="<?php echo $aOptionKey ?>"><?php echo $aOptionMeta['description']; ?></label></p>
-                                    </div>
-                                </th>
-                                <td>
-                                    <?php $this->createFormElement( $aOptionKey, $aOptionMeta ); ?>
-                                </td>
-                            </tr>
-                        
-                        <?php
-                        }                        
-                    }
-                    ?>
-                    </tbody>
-                </table>
-                <div class="submit">
-                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'wpf-recipe-costing') ?>"/>
-                </div>
-                                  
-            </form>
+<form method="post" action="">
+    <?php settings_fields($settingsGroup); ?>
+    <style type="text/css">
+        table.plugin-options-table {width: 100%; }
+        table.plugin-options-table tr:nth-child(even) {background: #f9f9f9}
+        table.plugin-options-table tr:nth-child(odd) {background: #FFF}
+        table.plugin-options-table td { width: 50%}
+        table.plugin-options-table td > div > p {padding: 1em;}
+    </style>
+    <table class="plugin-options-table">
+        <tbody>
+        <?php
+        if ( $optionMetaData != null ) {
+            foreach ( $optionMetaData as $aOptionKey => $aOptionMeta ) {     
+                ?>
+                <tr valign="top">
+                    <th scope="row">
+                        <p><label for="<?php echo $aOptionKey ?>"><?php echo $aOptionMeta['description']; ?></label></p>
+                    </th>
+                    <td>
+                        <?php $this->createFormElement( $aOptionKey, $aOptionMeta ); ?>
+                    </td>
+                </tr>
+
+            <?php
+            }                        
+        }
+        ?>
+        </tbody>
+    </table>
+    <div class="submit">
+        <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'wpf-recipe-costing') ?>"/>
+    </div>
+
+</form>
         </div>
         <?php
 
@@ -503,142 +501,103 @@ class WpfRecipeCosting_OptionsManager {
 
         if ( is_array( $aOptionMeta ) ) {
             
-//            print_r( $aOptionMeta['formElement']['type']);
-//            var_dump($aOptionMeta);
-            
-            if ( array_key_exists('description', $aOptionMeta) )    { $elementName = $aOptionMeta['description']; }  
+            if ( array_key_exists('description', $aOptionMeta) )    { $elementName = $aOptionMeta['description']; }
+            if (isset($elementName)) { $elementID = str_replace(' ','-',strtolower($elementName)); }
             
             if ( array_key_exists('type', $aOptionMeta) || isset($aOptionMeta['formElement']['type']) ) { 
                 $elementType = $aOptionMeta['formElement']['type']; 
-                //echo $elementType;
             }
                 
             if ( array_key_exists('value', $aOptionMeta) || isset($aOptionMeta['formElement']['value']) ) { 
                 $elementValue = $aOptionMeta['formElement']['value']; 
-                //print_r( $elementValue );
             }
             
-            if ( array_key_exists('info', $aOptionMeta) )           { $elementInfo = $aOptionMeta['formElement']['info']; }
             if ( array_key_exists('subtext', $aOptionMeta) )        { $elementSubtext = $aOptionMeta['formElement']['subtext']; }
             if ( array_key_exists('placeholder', $aOptionMeta) )    { $elementPlaceholder = $aOptionMeta['formElement']['placeholder']; }
-            if ( array_key_exists('tooltip', $aOptionMeta) )        { $elementTooltip = $aOptionMeta['formElement']['tooltip']; }
-            
-            
-            //if ( !isset($elementValue) )    { $elementValue = $elementName; }
-            //if ( !isset($elementType) )     { $elementType = 'text'; }
-            
+            if ( array_key_exists('tooltip', $aOptionMeta) )        { $elementTooltip = $aOptionMeta['formElement']['tooltip']; }            
             
             $savedOptionValue = get_option( $this->prefix($aOptionKey) );
-            $formElementPrepend = '<div class="form-group">';
-            $elementPrepend     = '<div id="form-element-'. $elementName .'" class="form-group">';
-            $elementAppend      = '</div>';
-            $formElementAppend  = '</div>';
             
-            $formGroupLabel     = '<label class="form-element-label" id="form-element-'.$aOptionKey.'-label">'.$elementName.'</label>';
-            $formElement        = '<input id="'.$elementName.'" class="" type="">';
-            
+            $formElement        = '';
             
             if ( is_array( $elementValue ) ) {
                 
                 switch( $elementType ) {
                         
                     case 'select': 
-                        // Drop-down list
-                        ?>
-                        <select name="<?php echo $elementType; ?>" id="form-element-<?php echo $aOptionKey; ?>">
-                        <?php 
-
+                        $formElement = '<select name="'. $elementType .'" id="'. $aOptionKey .'">';
                         foreach ( $elementValue as $choice ) { 
-
                             $savedOptionValue = $this->getOptionValueI18nString( $choice );
-                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; ?>
-
-                            <option value="<?php echo $choice; ?>" <?php echo $selected; ?>><?php echo $savedOptionValue; ?></option>
+                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; 
                             
-                        <?php } ?>
-                            
-                        </select>
-
-                        <?php break;
-                        
+                            $formElement = $formElement . '<option value="'. $choice .'" '. $selected
+                                . '>'. $savedOptionValue .'</option>';
+                        } 
+                        $formElement = $formElement . '</select>';
+                        break;
                     case 'radio':
-                    case 'radio-stacked':
-                        ?>
-                        <div class="custom-controls-stacked">
-                        <?php 
-
                         foreach ( $elementValue as $value ) { 
                             
                             $savedOptionValue = $this->getOptionValueI18nString( $value );
-                            $selected = ($value == $savedOptionValue) ? 'selected' : ''; ?>
+                            $selected = ($value == $savedOptionValue) ? 'selected' : ''; 
                             
-                              <label class="custom-control custom-radio">
-                                <input id="radioStacked1" name="radio-stacked" type="radio" class="custom-control-input" <?php echo $selected; ?>>
+                            $formElement = $formElement . '<label class="custom-control custom-radio">
+                                <input id="'. $aOptionKey .'" name="'. $elementType .'" type="'. $elementType .'" class="custom-control-input" '. $selected .'>
                                 <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description"><?php echo $value ?></span>
-                              </label>
+                                <span class="custom-control-description">'. $value .'</span>
+                              </label>';
+                        }
+                        break;
+                    case 'checkbox':
+                        $formElement = '<label id="'. $aOptionKey .'" class="custom-control custom-checkbox">
+                          <input type="'. $elementType .'" class="custom-control-input">
+                          <span class="custom-control-indicator"></span>
+                          <span class="custom-control-description">'. $elementValue .'</span>
+                        </label>';
+                        break;
+                    default:
+                        $formElement = '<select name="'. $elementType .'" id="'. $aOptionKey .'">';
+                        foreach ( $elementValue as $choice ) { 
+                            $savedOptionValue = $this->getOptionValueI18nString( $choice );
+                            $selected = ($choice == $savedOptionValue) ? 'selected' : ''; 
                             
-                        <?php } ?>
-                        <?php break;
-                        
+                            $formElement = $formElement . '<option value="'. $choice .'" '. $selected
+                                . '>'. $savedOptionValue .'</option>';
+                        } 
+                        $formElement = $formElement . '</select>';                        
                 }
-                
             } else {
                 
                 switch( $elementType ) {
                     case 'text': 
                     case 'email':
-                        // input field
-                        //$formElement = '<input type="'.$elementType.'" name="'. $elementName .'" id="'. $elementName .'" value="' . $elementValue. '" autocomplete="on" />';
-                        ?>
-
-                            <input type="<?php echo $elementType; ?>" 
-                                   class="form-control" 
-                                   id="form-input-<?php echo $aOptionKey; ?>" value="<?php echo $savedOptionValue; ?>"
-                                   <?php 
-                                    if (isset($elementPlaceholder)) { 
-                                        echo 'placeholder="$elementPlaceholder" ';
-                                   } ?>
-                                   autocomplete="on" 
-                                   >
-                        
-                        <?php if ( isset($elementSubtext) ) : ?>
-                            
-                        <small id="<?php echo $elementSubtext ?>"><?php echo $elementSubtext ?></small>
-                        
-                        <?php endif; ?>
-                        <?php break;
-
+                        $formElement = '<input type="'.$elementType.'" name="'. $elementName .'" id="'. $elementName .'" value="' . $savedOptionValue. '" autocomplete="on" />';
+                        if ( isset($elementSubtext) ) {
+                            $formElement = $formElement . '<small id="'. $elementSubtext .'">'. $elementSubtext .'</small>';
+                        }
+                        break;
                     case 'checkbox':
-                        ?>
-                        <label class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input">
+                        $formElement = '<label id="'. $aOptionKey .'" class="custom-control custom-checkbox">
+                          <input type="'. $elementType .'" class="custom-control-input">
                           <span class="custom-control-indicator"></span>
-                          <span class="custom-control-description"><?php echo $elementValue; ?></span>
-                        </label>
-                        <?php break;
+                          <span class="custom-control-description">'. $elementValue .'</span>
+                        </label>';
+                        break;
                     case 'file':
-                        ?>
-                            
-                        <label class="custom-file">
-                          <input type="file" id="file" class="custom-file-input">
+                        $formElement = '<label id="'. $aOptionKey .'" class="custom-'. $aOptionKey .'"> 
+                          <input type="'. $elementType .'" id="file" class="custom-file-input">
                           <span class="custom-file-control"></span>
-                        </label>
-                        
-                        <?php break;
-                    default: // input field
-                        ?>
-                        <input type="<?php echo $elementType ?>" name="<?php echo $elementType ?>" id="form-element-<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
-
-                    <?php
-                
+                        </label>';
+                        break;
+                    default: 
+                        $formElement = '<input id="'. $aOptionKey .'" type="'. $elementType .'" name="'. $elementType ;
+                        if (isset($elementPlaceholder)) { 
+                            $formElement = $formElement . 'placeholder="'.$elementPlaceholder.'" ';
+                        }
+                        $formElement = $formElement . '" value="'.  esc_attr($savedOptionValue) .'" />';            
                 }
-                
-            
-            
-            
             }
-            //return $formElementPrepend . $elementPrepend . $formGroupLabel . $formElement . $elementAppend . $formElementAppend;
+            echo $formElement;
         } else {
             // this should not happen, $aOptionMeta should always be an array
             echo 'Uh oh! aOptionMeta should be an array. Check '.$this->getOptionNamePrefix(). '_Plugin.php to make sure your Options are configured correctly.';

@@ -20,7 +20,12 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
                                         'formElement'   => array(
                                             'type'      => 'text',
                                             'value'     => ''
-                                             )
+                                             ),
+                                         'validationState'  => array(
+                                             'has-success'  => 'Company Name saved.',
+                                             'has-warning'  => 'You may want to rethink this name.',
+                                             'has-danger'   => 'Company Name failed to save.'
+                                            )
                                         ),
             'CompanyLogo'       => array( 'description' => __( 'Company Logo', $this->getPluginTextDomain() ),
                                         'formElement'   => array(
@@ -62,7 +67,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
                                          ),
             'WPUR_enable'      => array( 'description' => __( 'Enable WP Ultimate Recipe', $this->getPluginTextDomain() ),
                                          'formElement'  => array(
-                                            'type'      => 'radio-stacked',
+                                            'type'      => 'radio',
                                             'value'   => array( 'Enable', 'Disable' )
                                              )
                                          ),
