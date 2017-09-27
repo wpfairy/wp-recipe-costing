@@ -105,7 +105,7 @@ class WpfRecipeCosting_LifeCycle extends WpfRecipeCosting_InstallIndicator {
      * @return void
      */
     public function addSettingsSubMenuPage() {
-        //$this->addSettingsMenuPageToAdminMenu();
+        $this->addMenuPageToAdminMenu();
         //$this->addSettingsSubMenuPageToAdminMenu();
         //$this->addSettingsSubMenuPageToPluginsMenu();
         $this->addSettingsSubMenuPageToSettingsMenu();
@@ -125,38 +125,39 @@ class WpfRecipeCosting_LifeCycle extends WpfRecipeCosting_InstallIndicator {
         return 'edit.php?post_type=cost_card';
     }
     
-    protected function addSettingsMenuPageToAdminMenu() {
+    protected function addMenuPageToAdminMenu() {
         $this->requireExtraPluginFiles();
         $displayName = $this->getPluginDisplayName();
-        add_menu_page($displayName,
-                     $displayName,
-                     'manage_options',
-                     'edit.php?post_type=wpf-recipe',
-                     array(&$this, 'settingsPage'),
-                     'dashicons-editor-table',
-                      90
-                     );
-        add_submenu_page( $this->getSettingsSlug(), 
-                    'Add/Edit Cost Cards', 
-                    'Add/Edit Cost Cards',
-                    'manage_options', 
-                    'post-new.php?post_type=wpf-recipe',
-                    array(&$this, 'settingsPage')
-                    );
-        add_submenu_page( $this->getSettingsSlug(),
-                    'Add New', 
-                    'Add New',
-                    'manage_options', 
-                    $this->getSettingsSlug(),
-                    array(&$this, 'settingsPage')
-                    );
-        add_submenu_page( $this->getSettingsSlug(),
-                    'Settings', 
-                    'Settings',
-                    'manage_options', 
-                    $this->getSettingsSlug(),
-                    array(&$this, 'settingsPage')
-                    );
+//        add_menu_page($displayName,
+//                     $displayName,
+//                     'manage_options',
+//                     $this->getSettingsSlug(),
+//                      null,
+//                     'dashicons-editor-table',
+//                      90
+//                     );
+//        add_submenu_page( $this->getSettingsSlug(), 
+//                    'Categories', 
+//                    'Categories',
+//                    'manage_options', 
+//                    'edit-tags.php?taxonomy=category&post_type=cost-card',
+//                    array(&$this, 'categoriesPage')
+//                    );
+//        add_submenu_page( $this->getSettingsSlug(),
+//                    'Tags', 
+//                    'Tags',
+//                    'manage_options', 
+//                    'edit-tags.php?taxonomy=post_tag&post_type=cost-cards',
+//                    array(&$this, 'tagsPage')
+//                    );
+//        add_submenu_page( $this->getSettingsSlug(),
+//                    'Settings', 
+//                    'Settings',
+//                    'manage_options', 
+//                    $this->getSettingsSlug(),
+//                    array(&$this, 'settingsPage')
+//                         
+//                    );
     }
     
     protected function addSettingsSubMenuPageToPluginsMenu() {

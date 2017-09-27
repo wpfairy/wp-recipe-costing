@@ -16,6 +16,7 @@ class ComposerStaticInit807eda6bf09d2d89c123e87cbabd4894
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
+            'PhilippBaschke\\ACFProInstaller\\' => 31,
         ),
         'G' => 
         array (
@@ -23,12 +24,24 @@ class ComposerStaticInit807eda6bf09d2d89c123e87cbabd4894
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
+        'D' => 
+        array (
+            'Dotenv\\' => 7,
+        ),
+        'C' => 
+        array (
+            'Composer\\Installers\\' => 20,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'PhilippBaschke\\ACFProInstaller\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/philippbaschke/acf-pro-installer/src/ACFProInstaller',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -41,6 +54,14 @@ class ComposerStaticInit807eda6bf09d2d89c123e87cbabd4894
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'Dotenv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
+        ),
+        'Composer\\Installers\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
     );
 

@@ -13,7 +13,6 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
      * @return array of option meta data.
      */
     public function getOptionMetaData() {
-        //  http://plugin.michael-simpson.com/?page_id=31
         $options = array(
             //'_version' => array('Installed Version'), // Leave this one commented-out. Uncomment to test upgrades.
             'CompanyName'       => array( 'description' => __( 'Company Name', $this->getPluginTextDomain() ),
@@ -80,6 +79,18 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
         );
         return $options;
     }
+  
+    /**
+     * getOptionMetaData()
+     * @return array of cost card meta data.
+     */
+    public function getMetaData() {
+        $meta = array(
+            //'_version' => array('Installed Version'), // Leave this one commented-out. Uncomment to test upgrades.
+            'CompanyName'       => array( 'description' => __( 'Company Name', $this->getPluginTextDomain() )));
+        
+    }
+    
 
     protected function getOptionValueI18nString($optionValue) {
         $i18nValue = parent::getOptionValueI18nString($optionValue);
@@ -199,6 +210,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             'show_in_rest'          => true,
             'has_archive'           => 'cost-card',
             'query_var'             => true,
+            'taxonomies'  => array( 'category', 'post_tag' ),
             'rewrite'               => array(
                     'slug' => 'cost-card', // This controls the base slug that will display before each term
                     'with_front' => false // Don't display the category base before 
@@ -256,6 +268,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             'show_in_rest'          => true,
             'has_archive'           => 'wpf-recipe',
             'query_var'             => true,
+            'taxonomies'  => array( 'category', 'post_tag' ),
             'rewrite'               => array(
                     'slug' => 'wpf-recipe', // This controls the base slug that will display before each term
                     'with_front' => false // Don't display the category base before 
@@ -447,18 +460,9 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
     
     function enqueueScripts() {
         // Adding scripts & styles to all pages
-        //wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/main.js', __FILE__));
-        wp_enqueue_script('wpf-recipe-costing-script', plugins_url('/assets/js/build.js', __FILE__));
-        //wp_enqueue_style('wpf-recipe-costing-style', plugins_url('/assets/css/style.css', __FILE__)); 
-        
-        // enqueuing Bootstrap css and js file
-//        wp_enqueue_scripts('bootstrap-js');
-//        wp_register_script('bootstrap-js', 
-//                    plugin_dir_url( __FILE__ ) . '/vendor/bootstrap-4.0.0-alpha.6-dist/js/bootstrap.min.js', 
-//                    array ('jquery'), 
-//                    false, false);
-//        wp_enqueue_style('bootstrap-css', plugin_dir_url( __FILE__ ) . '/vendor/bootstrap-4.0.0-alpha.6-dist/css/bootstrap.min.css'); 
-
+        //wp_enqueue_script('wpf-recipe-costing-script', plugin_dir_url( __FILE__ ) . '/assets/js/main.js');
+        wp_enqueue_script('wpf-recipe-costing-script', plugin_dir_url( __FILE__ ) . '/assets/js/build.js');
+        //wp_enqueue_style('wpf-recipe-costing-style', plugin_dir_url( __FILE__ ) . '/assets/css/style.css'); 
 
         // enqueuing bootstrap-tabs.js file
 //        wp_enqueue_scripts('bootstrap-tabs');
@@ -472,6 +476,13 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
 //        wp_enqueue_scripts('vue-js');
         
     }
+    
+    function registerTaxonomyForObjectType() {
+            register_taxonomy_for_object_type( 'post_tag', 'cost-card' );
+            register_taxonomy_for_object_type( 'category', 'cost-card' );
+            register_taxonomy_for_object_type( 'post_tag', 'wpf-recipe' );
+            register_taxonomy_for_object_type( 'category', 'wpf-recipe' );
+    }
 
     public function addActionsAndFilters() {
 
@@ -481,19 +492,19 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
 
         // Add custom post_type
         add_action( 'init', array( &$this, 'register_custom_post_type' ) );
-        //add_action( 'init', array( &$this, 'register_custom_fields' ) );
+        add_action( 'init', array( &$this, 'register_custom_fields' ) );
 
         // Example adding a script & style just for the options administration page
         // http://plugin.michael-simpson.com/?page_id=47
-        //if (strpos($_SERVER['REQUEST_URI'], $this->getSettingsSlug()) !== false) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getSettingsSlug()) !== false) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueueScripts') );
-            //add_action( 'admin_enqueue_scripts', array($this, 'register_all_admin_scripts') );
-        //}
+        }
 
 
         // Add Actions & Filters
         // http://plugin.michael-simpson.com/?page_id=37
-
+        add_action( 'init', array( &$this, 'registerTaxonomyForObjectType' ) );
+        
         
         
         // Register short codes
