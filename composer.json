@@ -46,9 +46,8 @@
   ],
     "require": {
         "twbs/bootstrap": "v4.0.0-beta",
-        "guzzlehttp/guzzle": "~6.0",
-        "advanced-custom-fields/advanced-custom-fields-pro": "*",
-        "cartalyst/converter": "3.0.*"
+        "cartalyst/converter": "3.0.*",
+        "advanced-custom-fields/advanced-custom-fields-pro": "*"
     },
   "extra": {
     "installer-paths": {

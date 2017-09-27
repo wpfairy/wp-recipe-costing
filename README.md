@@ -16,8 +16,9 @@ This WordPress Plugin includes the following files:
 
 ## Features
 
-* Custom post types cost-card and wpf-recipe
-* 
+* autoloading
+* custom post types 'cost-card' and 'wpf-recipe'
+* Composer packages: Bootstrap 4, Converter by Cartalyst, and Advanced Custom Fields Pro! 
 
 ## Installation
 
