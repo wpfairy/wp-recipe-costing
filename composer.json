@@ -1,6 +1,6 @@
 {
   "name": "wpfairy/wp-recipe-costing",
-  "type": "project",
+  "type": "wordpress-plugin",
   "license": "MIT",
   "description": "WordPress plugin that provides recipe costing tools.",
   "homepage": "https://github.com/wpfairy/wp-recipe-costing",
@@ -36,17 +36,23 @@
 	    "require": {
 	      "philippbaschke/acf-pro-installer": "^1.0",
 	      "composer/installers": "^1.0"
+        }
+      }
+    },
+    {
+        "type": "composer",
+        "url": "https://packages.cartalyst.com"
     }
-  }
-}
   ],
     "require": {
-        "twbs/bootstrap": "4.0.0-alpha.6",
+        "twbs/bootstrap": "v4.0.0-beta",
         "guzzlehttp/guzzle": "~6.0",
-        "advanced-custom-fields/advanced-custom-fields-pro": "*"
+        "advanced-custom-fields/advanced-custom-fields-pro": "*",
+        "cartalyst/converter": "3.0.*"
     },
   "extra": {
     "installer-paths": {
+      "vendor/{$name}/": ["type:package"],
       "../../mu-plugins/{$name}/": ["type:wordpress-muplugin"],
       "../../plugins/{$name}/": ["type:wordpress-plugin"],
       "../../themes/{$name}/": ["type:wordpress-theme"]

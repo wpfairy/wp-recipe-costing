@@ -193,7 +193,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
             'label'                 => __( 'Cost Card', 'wpf-recipe-costing' ),
             'description'           => __( 'Cost Card post type for WP Recipe Costing', 'wpf-recipe-costing' ),
             'labels'                => $labels,
-            'supports'              => array( 'title', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'thumbnail', 'custom-fields', 'post-formats' ),
+            'supports'              => array( 'title', 'revisions', 'author', 'custom-fields' ),
             'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
@@ -492,7 +492,7 @@ class WpfRecipeCosting_Plugin extends WpfRecipeCosting_LifeCycle {
 
         // Add custom post_type
         add_action( 'init', array( &$this, 'register_custom_post_type' ) );
-        add_action( 'init', array( &$this, 'register_custom_fields' ) );
+        //add_action( 'init', array( &$this, 'register_custom_fields' ) );
 
         // Example adding a script & style just for the options administration page
         // http://plugin.michael-simpson.com/?page_id=47
