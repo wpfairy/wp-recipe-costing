@@ -252,86 +252,7 @@ class WpfRecipeCosting_OptionsManager {
         }
 
         $optionMetaData = $this->getOptionMetaData();
-        
-        //print_r( $optionMetaData );
-        
-//        echo '<ul>';
-//        foreach ( $optionMetaData as $parent ) {
-//            
-//            //print_r( $parent );
-//            //echo $optionMetaData[$parent];
-//            foreach ( $parent as $key => $value ) {
-//                if ( !is_array( $key ) ) {
-//                    //print_r( $value );
-//                    echo '<li>'.$key.': '.$value .'</li>';
-//                    //$choices = 
-//                } else {
-//                    echo '<ul>';
-//                    foreach ( $child as $key2 => $value2 ) {
-//                        echo '<li>'.$key2.': '.$value2 .'</li>';
-//                    }
-//                    echo '</ul>';
-//                }
-//                
-//            }
-//            
-//        }
-//        echo '</ul>';
-        
-        //$iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($optionMetaData));
-        
-
-        function iterator(&$complex_array){
-
-            foreach ($complex_array as $key => $value) {
-
-                if (is_array($value)) {
-                    
-                    echo "<p>[".$key."]</p>";
-                    iterator($value);
-                    
-                } else {
-                    
-                    echo "<li> [".$key."] ".$value .'</li>';
-                    if ( $key == 'format') {
-                        $aOptionFormat = $complex_array[$key];
-                        echo $aOptionFormat;
-                    }
-                    
-                }
-            }
-        }
-        //iterator($optionMetaData);
-        
-        //var_dump(array_keys($this->getOptionMetaData()));
-        //var_dump($this->getOptionMetaData());
-        
-        function recurseMetaArray(&$optionMetaData) {
-            foreach ($optionMetaData as $aOptionKey => $aOptionMeta) {
-                $aOptions = "";
-                if (is_array($aOptionMeta)) {
-                    echo "<p>[".$aOptionKey."]</p>";
-                    //$aOptions = "";
-                    recurseMetaArray($aOptionMeta);
-                } else {
-                    //echo "<li> [".$aOptionKey."] ".$aOptionMeta .'</li>';
-                    if ( $aOptionKey == 'format' ) {
-                        $aOptionFormat = $optionMetaData[$aOptionKey];
-                        echo "[format]<li>".$aOptionFormat."</li>";
-                    }
-                    if ( $aOptionKey == 'choices' ) {
-                        $aOptions = array($aOptions, $optionMetaData[$aOptionKey]);
-                        echo '[choices] ';
-                        foreach ( $aOptions as $k => $v ) {
-                            echo "<li> [".$k."] ".$v .'</li>';
-                        }
-                    }
-                }
-            }
-        }
-        //recurseMetaArray($optionMetaData);
-        
-
+       
         // Save Posted Options
         if ($optionMetaData != null) {
             foreach ($optionMetaData as $aOptionKey => $aOptionMeta) {
@@ -374,128 +295,53 @@ class WpfRecipeCosting_OptionsManager {
 
             <h2><?php echo $this->getPluginDisplayName(); echo ' '; _e('Settings', 'wpf-recipe-costing'); ?></h2>
 
-<form method="post" action="">
-    <?php settings_fields($settingsGroup); ?>
-    <style type="text/css">
-        table.plugin-options-table {width: 100%; }
-        table.plugin-options-table tr:nth-child(even) {background: #f9f9f9}
-        table.plugin-options-table tr:nth-child(odd) {background: #FFF}
-        table.plugin-options-table td { width: 50%}
-        table.plugin-options-table td > div > p {padding: 1em;}
-    </style>
-    <table class="plugin-options-table">
-        <tbody>
-        <?php
-        if ( $optionMetaData != null ) {
-            foreach ( $optionMetaData as $aOptionKey => $aOptionMeta ) {     
-                ?>
-                <tr valign="top">
-                    <th scope="row">
-                        <p><label for="<?php echo $aOptionKey ?>"><?php echo $aOptionMeta['description']; ?></label></p>
-                    </th>
-                    <td>
-                        <?php $this->createFormElement( $aOptionKey, $aOptionMeta ); ?>
-                    </td>
-                </tr>
+            <form method="post" action="">
+                <?php settings_fields($settingsGroup); ?>
+                <style type="text/css">
+                    table.plugin-options-table {width: 100%; }
+                    table.plugin-options-table tr:nth-child(even) {background: #f9f9f9}
+                    table.plugin-options-table tr:nth-child(odd) {background: #FFF}
+                    table.plugin-options-table td { width: 50%}
+                    table.plugin-options-table td > div > p {padding: 1em;}
+                </style>
+                <table class="plugin-options-table">
+                    <tbody>
+                    <?php
+                    if ( $optionMetaData != null ) {
+                        foreach ( $optionMetaData as $aOptionKey => $aOptionMeta ) {     
+                            ?>
+                            <tr valign="top">
+                                <th scope="row">
+                                    <p><label for="<?php echo $aOptionKey ?>"><?php echo $aOptionMeta['description']; ?></label></p>
+                                </th>
+                                <td>
+                                    <?php $this->createFormElement( $aOptionKey, $aOptionMeta ); ?>
+                                </td>
+                            </tr>
 
-            <?php
-            }                        
-        }
-        ?>
-        </tbody>
-    </table>
-    <div class="submit">
-        <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'wpf-recipe-costing') ?>"/>
-    </div>
+                        <?php
+                        }                        
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                <div class="submit">
+                    <input type="submit" class="button-primary" value="<?php _e('Save Changes', 'wpf-recipe-costing') ?>"/>
+                </div>
 
-</form>
+            </form>
         </div>
         <?php
 
     }
-
-  
+ 
     /**
      * Helper-function outputs the correct form element (input tag, select tag) for the given item
      * @param  $aOptionKey string name of the option (un-prefixed)
      * @param  $aOptionMeta mixed meta-data for $aOptionKey (either a string display-name or an array(display-name, option1, option2, ...)
      * @param  $savedOptionValue string current value for $aOptionKey
-     * @return void
-     */
-    protected function createFormControl( $aOptionKey, $aOptionMeta ) {
-        
-        $savedOptionValue = $this->getOption( $aOptionKey );
-
-        if ( is_array( $aOptionMeta ) && count( $aOptionMeta ) >= 2 && array_key_exists('choices', $aOptionMeta) ) {
-                
-            $choices = $aOptionMeta['choices'];
-            $savedOptionValue = $this->getOptionValueI18nString( $aChoice );
-            
-                switch( $aOptionMeta['formElement']['format'] ) {
-                    case 'input': 
-                        // Simple input field
-                        ?>
-                        <div id="" class="form-group">
-                            <input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
-                        </div>
-                        <?php break;
-                    case 'select': 
-                        // Drop-down list
-                        ?>
-                        <div id="" class="form-group">
-                            <select name="<?php echo $aOptionKey; ?>" id="<?php echo $aOptionKey; ?>">
-                            <?php foreach ( $choices as $aChoice ) { 
-                            
-                                $selected = ($aChoice == $savedOptionValue) ? 'selected' : '';?>
-                                
-                                <option value="<?php echo $aChoice; ?>" <?php echo $selected; ?>><?php echo $savedOptionValue; ?></option>
-                                
-                            <?php } ?>
-                            </select>
-                        </div>
-                        <?php break;
-                    case 'checkbox':
-                        ?>
-                        <div id="" class="form-group">
-                        <label class="custom-control custom-checkbox">
-                          <input type="checkbox" class="custom-control-input">
-                          <span class="custom-control-indicator"></span>
-                          <span class="custom-control-description">Check this custom checkbox</span>
-                        </label>
-                        </div>
-                        <?php break;
-                    case 'radio':
-                        ?>
-                        <div id="" class="form-group">
-                        <label class="custom-control custom-radio">
-                          <input id="radio1" name="radio" type="radio" class="custom-control-input">
-                          <span class="custom-control-indicator"></span>
-                          <span class="custom-control-description">Toggle this custom radio</span>
-                        </label>
-                        <label class="custom-control custom-radio">
-                          <input id="radio2" name="radio" type="radio" class="custom-control-input">
-                          <span class="custom-control-indicator"></span>
-                          <span class="custom-control-description">Or toggle this other custom radio</span>
-                        </label>
-                        </div>
-                        <?php break;
-                    default: // Simple input field
-                        ?>
-                        <div id="" class="form-group">
-                            <input type="text" name="<?php echo $aOptionKey ?>" id="<?php echo $aOptionKey ?>" value="<?php echo esc_attr($savedOptionValue) ?>" />
-                        </p>
-                        <?php
-                
-            } 
-        }
-    }
-    
-    /**
-     * Helper-function outputs the correct form element (input tag, select tag) for the given item
-     * @param  $aOptionKey string name of the option (un-prefixed)
-     * @param  $aOptionMeta mixed meta-data for $aOptionKey (either a string display-name or an array(display-name, option1, option2, ...)
-     * @param  $savedOptionValue string current value for $aOptionKey
-     * @return $formElementPrepend
+     * @param  
+     * @echo $formElement
      */
     protected function createFormElement( $aOptionKey, $aOptionMeta ) {
 
